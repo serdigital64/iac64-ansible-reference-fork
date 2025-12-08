@@ -1,0 +1,10 @@
+---
+- name: "Playbook"
+  hosts: "main"
+  gather_facts: false
+
+  tasks:
+    - name: "task-name"
+      ansible.builtin.debug:
+        msg: "module: ansible.builtin.debug"
+...
