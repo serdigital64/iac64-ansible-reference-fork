@@ -1,10 +1,25 @@
+# Reference: https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_intro.html
+# Reference: https://docs.ansible.com/projects/ansible/latest/reference_appendices/playbooks_keywords.html
 ---
-- name: "Playbook"
+- name: "PLAYBOOK"
   hosts: "main"
+  become: false
   gather_facts: false
+  vars:
+    - PLAYBOOK_LEVEL_VAR: "PLAYBOOK_LEVEL_VAR_VALUE"
+
+  pre_tasks:
+    - name: "pre-task-name"
+      ansible.builtin.debug:
+        msg: "pre-task"
 
   tasks:
     - name: "task-name"
       ansible.builtin.debug:
-        msg: "module: ansible.builtin.debug"
+        msg: "task"
+
+  post_tasks:
+    - name: "post-task-name"
+      ansible.builtin.debug:
+        msg: "post-task"
 ...

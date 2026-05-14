@@ -1,0 +1,11 @@
+---
+- name: "RUNTIME"
+  hosts: "main"
+  become: false
+  gather_facts: false
+
+  tasks:
+    - name: "Ansible Version"
+      debug:
+        msg: "{{ ansible_version }}"
+...

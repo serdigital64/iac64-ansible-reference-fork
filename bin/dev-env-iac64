@@ -14,39 +14,7 @@
 #######################################
 
 #
-# Module parameters
-#
-# * Use .dev.env file to override values
-#
-
-# shellcheck disable=SC2154
-{
-
-  # Build / IaC64 / Source module
-  export DEV_BUILD_IAC64_MODULE="${DEV_BUILD_IAC64_MODULE:-main}"
-  export DEV_BUILD_IAC64_VERSION="${DEV_BUILD_IAC64_VERSION:-0.1.0}"
-
-  # Deploy / IaC64 / Enable guardrail to prevent unintended deployment
-  export DEV_DEPLOY_IAC64_GUARDRAIL_ENABLED="${DEV_DEPLOY_IAC64_GUARDRAIL_ENABLED:-YES}"
-
-  # Remove / IaC64 / Enable guardrail to prevent unintended removal
-  export DEV_REMOVE_IAC64_GUARDRAIL_ENABLED="${DEV_REMOVE_IAC64_GUARDRAIL_ENABLED:-YES}"
-}
-
-#
-# External
-#
-# * External tools only. Use to declare configuration env-vars
-#
-
-# shellcheck disable=SC2154
-{
-  # External / OpenTofu / IAC64 runtime
-  export TF_VAR_iac64__profile_name
-}
-
-#
-# Internal variables
+# Module variables
 #
 # * Shared internal variables for module tasks
 #
@@ -54,7 +22,8 @@
 # shellcheck disable=SC2154
 {
   # Env / IaC64 / Module environment definition version
-  export DEV_ENV_IAC64_VERSION='3.2.0'
+  export DEV_ENV_IAC64_ID='iac64'
+  export DEV_ENV_IAC64_VERSION='3.2.3'
 
   # Env / IaC64 / Driver Name
   export DEV_ENV_IAC64_DRIVER_NAME_ANSIBLE='ansible'
@@ -72,6 +41,9 @@
   export DEV_ENV_IAC64_DRIVER_TAG_OPENTOFU='otf'
   export DEV_ENV_IAC64_DRIVER_TAG_SHELL='sh'
   export DEV_ENV_IAC64_DRIVER_TAG_TERRAFORM='tf'
+
+  # Lib / IaC64 / Minimum BashLib64 Version
+  export DEV_LIB_IAC64_REQUIRED_BASHLIB64='23.1.0'
 
   # Lib / IaC64 / Drivers
   export DEV_LIB_IAC64_HELPER_BUILD_OPENTOFU="${DEV_PATH_BIN}/dev-build-opentofu"
@@ -124,7 +96,39 @@
 }
 
 #
-# Internal functions
+# Module parameters
+#
+# * Use .dev.env file to override values
+#
+
+# shellcheck disable=SC2154
+{
+
+  # Build / IaC64 / Source module
+  export DEV_BUILD_IAC64_MODULE="${DEV_BUILD_IAC64_MODULE:-main}"
+  export DEV_BUILD_IAC64_VERSION="${DEV_BUILD_IAC64_VERSION:-0.1.0}"
+
+  # Deploy / IaC64 / Enable guardrail to prevent unintended deployment
+  export DEV_DEPLOY_IAC64_GUARDRAIL_ENABLED="${DEV_DEPLOY_IAC64_GUARDRAIL_ENABLED:-YES}"
+
+  # Remove / IaC64 / Enable guardrail to prevent unintended removal
+  export DEV_REMOVE_IAC64_GUARDRAIL_ENABLED="${DEV_REMOVE_IAC64_GUARDRAIL_ENABLED:-YES}"
+}
+
+#
+# External
+#
+# * External tools only. Use to declare configuration env-vars
+#
+
+# shellcheck disable=SC2154
+{
+  # External / OpenTofu / IAC64 runtime
+  export TF_VAR_iac64__profile_name
+}
+
+#
+# Module functions
 #
 # * Shared internal functions for module tasks
 #
@@ -133,8 +137,8 @@ function dev_iac64_check_guardrail_deploy() {
   bl64_dbg_app_show_function
   bl64_dbg_app_show_vars 'DEV_DEPLOY_IAC64_GUARDRAIL_ENABLED'
   if bl64_lib_flag_is_enabled "$DEV_DEPLOY_IAC64_GUARDRAIL_ENABLED"; then
-    bl64_msg_show_fatal 'Guardrail is enabled. Deployment request cancelled.'
-    return $BL64_LIB_ERROR_TASK_REQUIREMENTS
+    bl64_msg_show_fatal 'Guardrail is enabled. Deployment request cancelled (DEV_DEPLOY_IAC64_GUARDRAIL_ENABLED=YES)'
+    return "$BL64_LIB_ERROR_TASK_REQUIREMENTS"
   fi
 }
 
@@ -142,7 +146,7 @@ function dev_iac64_check_guardrail_remove() {
   bl64_dbg_app_show_function
   bl64_dbg_app_show_vars 'DEV_REMOVE_IAC64_GUARDRAIL_ENABLED'
   if bl64_lib_flag_is_enabled "$DEV_REMOVE_IAC64_GUARDRAIL_ENABLED"; then
-    bl64_msg_show_fatal 'Guardrail is enabled. Removal request cancelled.'
-    return $BL64_LIB_ERROR_TASK_REQUIREMENTS
+    bl64_msg_show_fatal 'Guardrail is enabled. Removal request cancelled (DEV_REMOVE_IAC64_GUARDRAIL_ENABLED=YES)'
+    return "$BL64_LIB_ERROR_TASK_REQUIREMENTS"
   fi
 }
